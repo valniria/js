@@ -7,20 +7,28 @@ botaoAdicionar.addEventListener("click", function(e) {
 
 	var paciente = obtemInformacoesDoForm(form);
 
-	var pacienteTr = montaTr(paciente);
+	var erros = validaPaciente(paciente);
+	if(erros.length > 0){
+		exibeMensagemDeErro(erros);
 
-	if(!validaPaciente(paciente)){
-		console.log("paciente invalido");
 		return;
 	}
 	
-	var tabela = document.querySelector("#tabela-pacientes");
+	adicionaPacienteNaTabela(paciente);
 
-	tabela.appendChild(pacienteTr);
+	var ul = document.querySelector("#mensagem-erro");
+	ul.innerHTML = "";
 
 	form.reset();
 	
 });
+
+function adicionaPacienteNaTabela(paciente) {
+
+	var pacienteTr = montaTr(paciente);
+	var tabela = document.querySelector("#tabela-pacientes");
+	tabela.appendChild(pacienteTr);
+}
 
 function obtemInformacoesDoForm(form) {
 
@@ -50,16 +58,52 @@ function montaTr(paciente) {
 
 function montaTd(dado, classe) {
 	var td = document.createElement("td");
-	td.textContent = dado
+	td.textContent = dado;
 	td.classList.add(classe);
 
 	return td;
 }
 
 function validaPaciente(paciente){
-	if(validaPeso(paciente.peso)){
-		return true;
-	} else {
-		return false;
-	}
+
+	var erros = [];
+
+
+	if(!validaPeso(paciente.peso)) 
+		erros.push("O Peso é inválido");
+
+	if(!validaAltura(paciente.altura)) 
+		erros.push("A Altura é inválida");
+
+	if(paciente.nome.length == 0)
+		erros.push("O Nome não pode ser Vazio");
+
+	if(paciente.gordura.length == 0)
+		erros.push("A % Gordura Corporal é inválida");
+
+	if(paciente.peso.length == 0)
+		erros.push("O Peso não pode ser Vazio");
+
+	if(paciente.altura.length == 0)
+		erros.push("A Altura não pode ser Vazio");
+
+	if(paciente.gordura.length == 0)
+		erros.push("A Gordura não pode ser Vazio");
+
+	
+
+	return erros;
+}
+
+function exibeMensagemDeErro(erros) {
+	var ul = document.querySelector("#mensagem-erro");
+	ul.innerHTML = "";
+
+	erros.forEach(function(erro){
+		var li = document.createElement("li");
+		li.textContent = erro;
+
+		ul.appendChild(li);
+	})
+	return ul;
 }

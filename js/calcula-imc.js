@@ -54,6 +54,14 @@ function validaAltura(altura) {
 	}
 }
 
+function validaGordura(gordura) {
+	if(gordura >=0 && gordura < 50){
+		return true;
+	} else {
+		return false;
+	}
+}
+
 function calculaImc(peso, altura){
 
 	return (peso/(altura*altura)).toFixed(2);
